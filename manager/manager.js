@@ -3,9 +3,14 @@
 const {faker} = require('@faker-js/faker');
 const {v4: uuidv4} = require('uuid');
 
-const events = require('./events');
-require('./pilot');
-require('./system');
+// const events = require('../events');
+
+const io = require('socket.io-client');
+
+const socket = io.connect('http://localhost:3000');
+
+// require('./pilot');
+// require('../server/system');
 
 // console.log(faker.name.firstName());
 // console.log(faker.address.city());
@@ -20,10 +25,10 @@ setInterval(() => {
   console.log(
     `Manager: new flight with number: ${info.flightNO}  have been scheduled`
   );
-  events.emit('newFlight', info);
+  socket.emit('newFlight', info);
 }, 9000);
 
-events.on('arrived', arrived);
+socket.on('arrived', arrived);
 
 function arrived(info) {
   console.log(
